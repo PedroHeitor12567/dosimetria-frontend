@@ -35,8 +35,11 @@ export interface DosimetriaResponse {
     pena_maxima_meses: number;
     circunstancias_desfavoraveis: string[];
     pena_base_meses: number;
+    pena_base_dias: number;
     pena_intermediaria_meses: number;
+    pena_intermediaria_dias: number;
     pena_definitiva_meses: number;
+    pena_definitiva_dias: number;
     pena_definitiva_anos: number;
     pena_definitiva_formatada: string;
 }

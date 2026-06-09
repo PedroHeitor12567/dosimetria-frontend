@@ -1,13 +1,16 @@
 import React, { CSSProperties } from 'react';
 import { DosimetriaResponse, AjusteLegal, AjusteFase3 } from '../types';
 
-function mesesParaTexto(meses: number): string {
-    const anos = Math.floor(meses / 12);
-    const m = meses % 12;
+function diasParaTexto(dias: number): string {
+    const anos = Math.floor(dias / 360);
+    const resto = dias % 360;
+    const meses = Math.floor(resto / 30);
+    const diasRestantes = resto % 30;
     const partes: string[] = [];
     if (anos > 0) partes.push(`${anos} ano${anos > 1 ? 's' : ''}`);
-    if (m > 0) partes.push(`${m} ${m > 1 ? 'meses' : 'mês'}`);
-    return partes.join(' e ') || '0 meses';
+    if (meses > 0) partes.push(`${meses} ${meses > 1 ? 'meses' : 'mês'}`);
+    if (diasRestantes > 0) partes.push(`${diasRestantes} dia${diasRestantes > 1 ? 's' : ''}`);
+    return partes.join(' e ') || '0 dias';
 }
 
 interface TimelineStep {
@@ -141,7 +144,7 @@ export function Resultado({ data, fase2Items, fase3Items }: Props) {
     const steps: TimelineStep[] = [
         {
             label: 'Fase 1 — Pena-base',
-            pena: mesesParaTexto(data.pena_base_meses),
+            pena: diasParaTexto(data.pena_base_dias),
             detail:
                 data.circunstancias_desfavoraveis.length === 0
                     ? 'Todas as circunstâncias favoráveis — pena fixada no mínimo legal.'
@@ -149,7 +152,7 @@ export function Resultado({ data, fase2Items, fase3Items }: Props) {
         },
         {
             label: 'Fase 2 — Pena intermediária',
-            pena: mesesParaTexto(data.pena_intermediaria_meses),
+            pena: diasParaTexto(data.pena_intermediaria_dias),
             detail:
                 fase2Items.length === 0
                     ? 'Sem agravantes ou atenuantes — pena-base mantida.'
@@ -157,7 +160,7 @@ export function Resultado({ data, fase2Items, fase3Items }: Props) {
         },
         {
             label: 'Fase 3 — Pena definitiva',
-            pena: mesesParaTexto(data.pena_definitiva_meses),
+            pena: diasParaTexto(data.pena_definitiva_dias),
             detail:
                 fase3Items.length === 0
                     ? 'Sem majorantes ou minorantes — pena intermediária mantida.'
@@ -174,13 +177,13 @@ export function Resultado({ data, fase2Items, fase3Items }: Props) {
             <div style={s.body}>
                 <div style={s.metricsGrid}>
                     {[
-                        { label: 'Pena-base', meses: data.pena_base_meses },
-                        { label: 'Intermediária', meses: data.pena_intermediaria_meses },
-                        { label: 'Definitiva', meses: data.pena_definitiva_meses },
+                        { label: 'Pena-base', dias: data.pena_base_dias },
+                        { label: 'Intermediária', dias: data.pena_intermediaria_dias },
+                        { label: 'Definitiva', dias: data.pena_definitiva_dias },
                     ].map((m) => (
                         <div key={m.label} style={s.metricCard}>
                             <span style={s.metricLabel}>{m.label}</span>
-                            <span style={s.metricValue}>{mesesParaTexto(m.meses)}</span>
+                            <span style={s.metricValue}>{diasParaTexto(m.dias)}</span>
                         </div>
                     ))}
                 </div>
